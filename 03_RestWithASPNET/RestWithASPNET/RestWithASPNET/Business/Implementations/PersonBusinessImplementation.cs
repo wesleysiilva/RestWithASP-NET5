@@ -1,17 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
-using RestWithASPNET.Model;
-using RestWithASPNET.Model.Context;
+﻿using RestWithASPNET.Model;
 using RestWithASPNET.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RestWithASPNET.Business.Implementations {
-  
-  public class PersonBusinessImplementation : IPersonBusiness {
-    private readonly IPersonRepository _repository;
 
-    public PersonBusinessImplementation(IPersonRepository repository) {
+  public class PersonBusinessImplementation : IPersonBusiness {
+    private readonly IRepository<Person> _repository;
+
+    public PersonBusinessImplementation(IRepository<Person> repository) {
       _repository = repository;
     }
 
