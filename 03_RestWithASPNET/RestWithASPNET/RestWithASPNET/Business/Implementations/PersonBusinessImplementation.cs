@@ -1,4 +1,6 @@
-﻿using RestWithASPNET.Model;
+﻿using RestWithASPNET.Data.Converter.Implementations;
+using RestWithASPNET.Data.VO;
+using RestWithASPNET.Model;
 using RestWithASPNET.Repository;
 using System.Collections.Generic;
 
@@ -6,25 +8,31 @@ namespace RestWithASPNET.Business.Implementations {
 
   public class PersonBusinessImplementation : IPersonBusiness {
     private readonly IRepository<Person> _repository;
+    private readonly PersonConverter _converter;
 
     public PersonBusinessImplementation(IRepository<Person> repository) {
       _repository = repository;
+      _converter = new PersonConverter();
     }
 
-    public List<Person> FindAll() {
-      return _repository.FindAll();
+    public List<PersonVO> FindAll() {
+      return _converter.Parse(_repository.FindAll());
     }
 
-    public Person FindByID(long id) {
-      return _repository.FindByID(id);
+    public PersonVO FindByID(long id) {
+      return _converter.Parse(_repository.FindByID(id));
     }
 
-    public Person Create(Person person) {
-      return _repository.Create(person);
+    public PersonVO Create(PersonVO person) {
+      var PersonEntity = _converter.Parse(person);
+      PersonEntity = _repository.Create(PersonEntity);
+      return _converter.Parse(PersonEntity);
     }
 
-    public Person Update(Person person) {
-      return _repository.Update(person);
+    public PersonVO Update(PersonVO person) {
+      var PersonEntity = _converter.Parse(person);
+      PersonEntity = _repository.Update(PersonEntity);
+      return _converter.Parse(PersonEntity);
     }
 
     public void Delete(long id) {
