@@ -45,7 +45,7 @@ namespace RestWithASPNET.Hypermedia.Enricher {
     private string getLink(long id, IUrlHelper urlHelper, string path) {
       lock (_lock) {
         var url = new { controller = path, id = id };
-        return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2f", "/").ToString();
+        return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").ToString();
       }
     }
   }

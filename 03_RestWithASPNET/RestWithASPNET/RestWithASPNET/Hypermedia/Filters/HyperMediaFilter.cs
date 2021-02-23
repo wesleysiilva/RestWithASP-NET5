@@ -12,11 +12,11 @@ namespace RestWithASPNET.Hypermedia.Filters {
     }
 
     public override void OnResultExecuting(ResultExecutingContext context) {
-      tryEnrichResult(context);
+      TryEnrichResult(context);
       base.OnResultExecuting(context);
     }
 
-    private void tryEnrichResult(ResultExecutingContext context) {
+    private void TryEnrichResult(ResultExecutingContext context) {
       if (context.Result is OkObjectResult objectResult) {
         var enricher = _hyperMediaFilterOptions
           .ContentResponseEnricherList

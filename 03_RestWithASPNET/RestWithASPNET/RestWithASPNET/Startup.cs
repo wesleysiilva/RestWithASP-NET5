@@ -52,6 +52,7 @@ namespace RestWithASPNET {
 
       var filterOptions = new HyperMediaFilterOptions();
       filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+      filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
       services.AddSingleton(filterOptions);
 

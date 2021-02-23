@@ -10,8 +10,8 @@ namespace RestWithASPNET.Hypermedia.Enricher {
     private readonly object _lock = new object();
 
     protected override Task EnrichModel(PersonVO content, IUrlHelper urlHelper) {
-      var path = "api/persons/v1";
-      string link = getLink(content.Id, urlHelper, path);
+      var path = "api/person/v1";
+      string link = GetLink(content.Id, urlHelper, path);
       content.Links.Add(new HyperMediaLink() {
         Action = HttpActionVerb.GET,
         Href = link,
@@ -42,10 +42,10 @@ namespace RestWithASPNET.Hypermedia.Enricher {
       return null;
     }
 
-    private string getLink(long id, IUrlHelper urlHelper, string path) {
+    private string GetLink(long id, IUrlHelper urlHelper, string path) {
       lock (_lock) {
         var url = new { controller = path, id = id };
-        return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2f", "/").ToString();
+        return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").ToString();
       }
     }
   }
