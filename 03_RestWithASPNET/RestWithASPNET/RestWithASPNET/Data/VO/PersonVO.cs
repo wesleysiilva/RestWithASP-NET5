@@ -1,8 +1,12 @@
 ﻿//using System.Text.Json.Serialization;
 
+using RestWithASPNET.Hypermedia;
+using RestWithASPNET.Hypermedia.Abstract;
+using System.Collections.Generic;
+
 namespace RestWithASPNET.Data.VO {
   
-  public class PersonVO {
+  public class PersonVO : ISupportsHyperMedia {
 
     //Custom Serialization Example
     //[JsonPropertyName("code")]
@@ -19,5 +23,7 @@ namespace RestWithASPNET.Data.VO {
 
     //[JsonPropertyName("sex")]
     public string Gender { get; set; }
+
+    public List<HyperMediaLink> Links { get; set; } = new List<HyperMediaLink>();
   }
 }
