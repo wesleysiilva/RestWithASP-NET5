@@ -8,8 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace RestWithASPNET.Controllers {
+  [ApiVersion("1")] //Versão da API
   [ApiController]
-  [Route("api/[controller]")]
+  [Route("api/[controller]/v{version:apiVersion}")]
   public class PersonController : ControllerBase {
 
     //Variáveis de escopo privado, começar a nomenclatura com _
