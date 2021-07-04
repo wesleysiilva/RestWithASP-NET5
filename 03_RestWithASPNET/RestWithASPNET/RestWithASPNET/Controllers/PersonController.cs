@@ -19,12 +19,16 @@ namespace RestWithASPNET.Controllers {
       _personBusiness = personBusiness;
     }
 
+    // Maps GET requests to https://localhost:{port}/api/person/
     [HttpGet]
     [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Get() {
       return Ok(_personBusiness.FindAll());
     }
 
+    // Maps GET requests to https://localhost:{port}/api/person/{id}
+    // receiving an ID as in the Request Path
+    // Get with parameters for FindById -> Search by ID
     [HttpGet("{id}")]
     [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Get(long id) {
@@ -32,14 +36,18 @@ namespace RestWithASPNET.Controllers {
       if (person == null) return NotFound();
       return Ok(person);
     }
-    
+
+    // Maps POST requests to https://localhost:{port}/api/person/
+    // [FromBody] consumes the JSON object sent in the request body
     [HttpPost]
     [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Post([FromBody] PersonVO person) {
       if (person == null) return BadRequest();
       return Ok(_personBusiness.Create(person));
     }
-    
+
+    // Maps PUT requests to https://localhost:{port}/api/person/
+    // [FromBody] consumes the JSON object sent in the request body
     [HttpPut]
     [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Put([FromBody] PersonVO person) {
@@ -47,6 +55,8 @@ namespace RestWithASPNET.Controllers {
       return Ok(_personBusiness.Update(person));
     }
 
+    // Maps DELETE requests to https://localhost:{port}/api/person/{id}
+    // receiving an ID as in the Request Path
     [HttpDelete("{id}")]
     public IActionResult Delete(long id) {
       _personBusiness.Delete(id);

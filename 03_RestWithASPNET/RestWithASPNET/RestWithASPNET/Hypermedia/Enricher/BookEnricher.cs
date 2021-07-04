@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RestWithASPNET.Hypermedia.Enricher {
-  public class BookEnricher : ContentReponseEnricher<BookVO> {
+  public class BookEnricher : ContentResponseEnricher<BookVO> {
 
     private readonly object _lock = new object();
 
     protected override Task EnrichModel(BookVO content, IUrlHelper urlHelper) {
-      var path = "api/books/v1";
-      string link = getLink(content.Id, urlHelper, path);
+      var path = "api/book/v1";
+      string link = GetLink(content.Id, urlHelper, path);
+
       content.Links.Add(new HyperMediaLink() {
         Action = HttpActionVerb.GET,
         Href = link,
@@ -42,11 +43,11 @@ namespace RestWithASPNET.Hypermedia.Enricher {
       return null;
     }
 
-    private string getLink(long id, IUrlHelper urlHelper, string path) {
+    private string GetLink(long id, IUrlHelper urlHelper, string path) {
       lock (_lock) {
         var url = new { controller = path, id = id };
         return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").ToString();
-      }
+      };
     }
   }
 }

@@ -9,13 +9,12 @@ using System.Collections.Concurrent;
 using RestWithASPNET.Hypermedia.Abstract;
 
 namespace RestWithASPNET.Hypermedia {
-  public abstract class ContentReponseEnricher<T> : IResponseEnricher where T : ISupportsHyperMedia {
+  public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : ISupportsHyperMedia {
 
-    public ContentReponseEnricher() {
+    public ContentResponseEnricher() {
 
     }
-
-    public bool CanEnrich(Type contentType) {
+    public virtual bool CanEnrich(Type contentType) {
       return contentType == typeof(T) || contentType == typeof(List<T>);
     }
 
@@ -42,8 +41,8 @@ namespace RestWithASPNET.Hypermedia {
              EnrichModel(element, urlHelper);
           });
         }
-        await Task.FromResult<object>(null);
       }
+      await Task.FromResult<object>(null);
     }
   }
 }

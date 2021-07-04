@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RestWithASPNET.Hypermedia.Enricher {
-  public class PersonEnricher : ContentReponseEnricher<PersonVO> {
+  public class PersonEnricher : ContentResponseEnricher<PersonVO> {
 
     private readonly object _lock = new object();
 
@@ -46,7 +46,7 @@ namespace RestWithASPNET.Hypermedia.Enricher {
       lock (_lock) {
         var url = new { controller = path, id = id };
         return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").ToString();
-      }
+      };
     }
   }
 }

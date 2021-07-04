@@ -3,10 +3,10 @@ using System.Text;
 
 namespace RestWithASPNET.Hypermedia {
   public class HyperMediaLink {
-    public String Rel { get; set; }
-    public String Type { get; set; }
-    public String Action { get; set; }
-    public String Href {
+    public string Rel { get; set; }
+
+    private string href;
+    public string Href {
       get {
         object _lock = new object();
         lock (_lock) {
@@ -18,6 +18,7 @@ namespace RestWithASPNET.Hypermedia {
         href = value;
       }
     }
-    private String href;
+    public string Type { get; set; }
+    public string Action { get; set; }
   }
 }
