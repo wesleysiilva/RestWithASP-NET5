@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestWithASPNET.Model;
-using RestWithASPNET.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RestWithASPNET.Business;
 
 namespace RestWithASPNET.Controllers {
   [ApiVersion("1")] //Versão da API
@@ -15,18 +11,18 @@ namespace RestWithASPNET.Controllers {
 
     //Variáveis de escopo privado, começar a nomenclatura com _
     private readonly ILogger<PersonController> _logger;
-    private IPersonService _personService;
+    private IPersonBusiness _personBusiness;
 
-    public PersonController(ILogger<PersonController> logger, IPersonService personService) {
+    public PersonController(ILogger<PersonController> logger, IPersonBusiness personBusiness) {
       _logger = logger;
-      _personService = personService;
+      _personBusiness = personBusiness;
     }
 
     //Maps GET requests to https://localhost:{port}/api/person/
     //Get with parameters for FindAll -> Find All
     [HttpGet]
     public IActionResult Get() {
-      return Ok(_personService.FindAll());
+      return Ok(_personBusiness.FindAll());
     }
     
     //Maps GET requests to https://localhost:{port}/api/person/{id}
@@ -34,7 +30,7 @@ namespace RestWithASPNET.Controllers {
     //Get with parameters for FindById -> Search by ID
     [HttpGet("{id}")]
     public IActionResult Get(long id) {
-      var person = _personService.FindByID(id);
+      var person = _personBusiness.FindByID(id);
       if (person == null) return NotFound();
       return Ok(person);
     }
@@ -44,7 +40,7 @@ namespace RestWithASPNET.Controllers {
     [HttpPost]
     public IActionResult Post([FromBody] Person person ) {      
       if (person == null) return BadRequest();
-      return Ok(_personService.Create(person));
+      return Ok(_personBusiness.Create(person));
     }
 
     //Maps PUT requests to https://localhost:{port}/api/person/
@@ -52,14 +48,14 @@ namespace RestWithASPNET.Controllers {
     [HttpPut]
     public IActionResult Put([FromBody] Person person) {
       if (person == null) return BadRequest();
-      return Ok(_personService.Update(person));
+      return Ok(_personBusiness.Update(person));
     }
 
     //Maps DELETE requests to https://localhost:{port}/api/person/{id}
     //receiveing an ID as in the Request Path
     [HttpDelete("{id}")]
     public IActionResult Delete(long id) {
-      _personService.Delete(id);      
+      _personBusiness.Delete(id);      
       return NoContent();
     }
   }
