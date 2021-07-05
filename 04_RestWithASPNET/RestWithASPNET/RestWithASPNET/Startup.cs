@@ -9,14 +9,20 @@ using RestWithASPNET.Business;
 using RestWithASPNET.Business.Implementations;
 using RestWithASPNET.Repository;
 using RestWithASPNET.Repository.Implementations;
+using Serilog;
+using System;
+using System.Collections.Generic;
 
 namespace RestWithASPNET {
   public class Startup {
-    public Startup(IConfiguration configuration) {
-      Configuration = configuration;
-    }
-
+    public IWebHostEnvironment Enviroment { get; }
     public IConfiguration Configuration { get; }
+
+    public Startup(IConfiguration configuration, IWebHostEnvironment enviroment) {
+      Configuration = configuration;
+      Enviroment = enviroment;
+      Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+    }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
@@ -26,12 +32,23 @@ namespace RestWithASPNET {
       var connection = Configuration["MySQLConnection:MySQLConnectionString"];
       services.AddDbContext<MySQLContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
+      if (Enviroment.IsDevelopment()) {
+        MigrateDataBase(connection);
+      }
+
       //Versionamento das APIs
       services.AddApiVersioning();
 
       //Injeção de dependencia, referencia a interface e a implementação da API.
+      //=======================================================================
+      //Person
       services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
       services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
+
+      //Books
+      services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+      services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+      //=======================================================================
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +66,20 @@ namespace RestWithASPNET {
       app.UseEndpoints(endpoints => {
         endpoints.MapControllers();
       });
+    }
+
+    private void MigrateDataBase(string connection) {
+      try {
+        var evolveConnection = new MySql.Data.MySqlClient.MySqlConnection(connection);
+        var evolve = new Evolve.Evolve(evolveConnection, msg => Log.Information(msg)) {
+          Locations = new List<string> { "db/migrations", "db/dataset" },
+          IsEraseDisabled = true,
+        };
+        evolve.Migrate();
+      } catch (Exception ex) {
+        Log.Error("Database migration failed", ex);
+        throw;
+      }
     }
   }
 }
