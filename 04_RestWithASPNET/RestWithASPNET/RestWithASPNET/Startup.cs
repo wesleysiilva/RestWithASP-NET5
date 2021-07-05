@@ -8,10 +8,10 @@ using RestWithASPNET.Model.Context;
 using RestWithASPNET.Business;
 using RestWithASPNET.Business.Implementations;
 using RestWithASPNET.Repository;
-using RestWithASPNET.Repository.Implementations;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using RestWithASPNET.Repository.Generic;
 
 namespace RestWithASPNET {
   public class Startup {
@@ -43,11 +43,12 @@ namespace RestWithASPNET {
       //=======================================================================
       //Person
       services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-      services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 
       //Books
       services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-      services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+
+      //Generic
+      services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
       //=======================================================================
     }
 
