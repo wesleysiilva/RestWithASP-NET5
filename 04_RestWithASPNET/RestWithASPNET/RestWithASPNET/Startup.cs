@@ -12,6 +12,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using RestWithASPNET.Repository.Generic;
+using Microsoft.Net.Http.Headers;
 
 namespace RestWithASPNET {
   public class Startup {
@@ -35,6 +36,13 @@ namespace RestWithASPNET {
       if (Enviroment.IsDevelopment()) {
         MigrateDataBase(connection);
       }
+
+      //Passa a receber e enviar json ou xml, de acordo com a propriedade accept no header da requisição
+      services.AddMvc(options => {
+        options.RespectBrowserAcceptHeader = true; 
+        options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
+        options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
+      }).AddXmlSerializerFormatters();
 
       //Versionamento das APIs
       services.AddApiVersioning();
