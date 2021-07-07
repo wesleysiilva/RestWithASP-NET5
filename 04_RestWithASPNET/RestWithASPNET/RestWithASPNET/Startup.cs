@@ -15,6 +15,8 @@ using RestWithASPNET.Repository.Generic;
 using Microsoft.Net.Http.Headers;
 using RestWithASPNET.Hypermedia.Filters;
 using RestWithASPNET.Hypermedia.Enricher;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace RestWithASPNET {
   public class Startup {
@@ -54,6 +56,21 @@ namespace RestWithASPNET {
       //Versionamento das APIs
       services.AddApiVersioning();
 
+      //Suporte ao Swagger
+      services.AddSwaggerGen(c => {
+        c.SwaggerDoc(
+          "v1", 
+          new OpenApiInfo{
+            Title = "REST API's from 0 to Azure with ASP.NET Core 5 and Docker",
+            Version = "v1",
+            Description = "API RESTful developed in course 'REST API's from 0 to Azure with ASP.NET Core 5 and Docker'",
+            Contact = new OpenApiContact {
+              Name = "Wesley Silva",
+              Url = new Uri("https://github.com/wesleysiilva")
+            }
+          });
+      });
+
       //Injeção de dependencia, referencia a interface e a implementação da API.
       //=======================================================================
       //Person
@@ -76,6 +93,16 @@ namespace RestWithASPNET {
       app.UseHttpsRedirection();
 
       app.UseRouting();
+
+      //Suporte ao swagger
+      app.UseSwagger(); //Responsável pelo json com a documentação
+      app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "REST API's from 0 to Azure with ASP.NET Core 5 and Docker - v1");
+      }); //Responsável pela página html
+
+      var option = new RewriteOptions();
+      option.AddRedirect("^$","swagger");
+      app.UseRewriter(option);
 
       app.UseAuthorization();
 
