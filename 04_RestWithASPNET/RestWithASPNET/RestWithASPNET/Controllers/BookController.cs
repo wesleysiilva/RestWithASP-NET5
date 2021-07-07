@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using RestWithASPNET.Business;
 using RestWithASPNET.Data.VO;
+using RestWithASPNET.Hypermedia.Filters;
 
 namespace RestWithASPNET.Controllers {
   [ApiVersion("1")] //Versão da API
@@ -21,6 +22,7 @@ namespace RestWithASPNET.Controllers {
     //Maps GET requests to https://localhost:{port}/api/book/
     //Get with parameters for FindAll -> Find All
     [HttpGet]
+    [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Get() {
       return Ok(_bookBusiness.FindAll());
     }
@@ -29,6 +31,7 @@ namespace RestWithASPNET.Controllers {
     //receiveing an ID as in the Request Path
     //Get with parameters for FindById -> Search by ID
     [HttpGet("{id}")]
+    [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Get(long id) {
       var book = _bookBusiness.FindByID(id);
       if (book == null) return NotFound();
@@ -38,6 +41,7 @@ namespace RestWithASPNET.Controllers {
     //Maps POST requests to https://localhost:{port}/api/book/
     //[FromBody] consumes the JSON object sent in the request body
     [HttpPost]
+    [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Post([FromBody] BookVO book ) {      
       if (book == null) return BadRequest();
       return Ok(_bookBusiness.Create(book));
@@ -46,6 +50,7 @@ namespace RestWithASPNET.Controllers {
     //Maps PUT requests to https://localhost:{port}/api/book/
     //[FromBody] consumes the JSON object sent in the request body
     [HttpPut]
+    [TypeFilter(typeof(HyperMediaFilter))]
     public IActionResult Put([FromBody] BookVO book) {
       if (book == null) return BadRequest();
       return Ok(_bookBusiness.Update(book));

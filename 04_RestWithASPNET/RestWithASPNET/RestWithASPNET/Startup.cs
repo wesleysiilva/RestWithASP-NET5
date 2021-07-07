@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using RestWithASPNET.Repository.Generic;
 using Microsoft.Net.Http.Headers;
+using RestWithASPNET.Hypermedia.Filters;
+using RestWithASPNET.Hypermedia.Enricher;
 
 namespace RestWithASPNET {
   public class Startup {
@@ -44,6 +46,11 @@ namespace RestWithASPNET {
         options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
       }).AddXmlSerializerFormatters();
 
+      var filterOptions = new HyperMediaFilterOptions();
+      filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+      filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
+      services.AddSingleton(filterOptions);
+
       //Versionamento das APIs
       services.AddApiVersioning();
 
@@ -74,6 +81,7 @@ namespace RestWithASPNET {
 
       app.UseEndpoints(endpoints => {
         endpoints.MapControllers();
+        endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
       });
     }
 
