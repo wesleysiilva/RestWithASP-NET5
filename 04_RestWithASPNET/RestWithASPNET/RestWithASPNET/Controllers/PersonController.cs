@@ -73,6 +73,18 @@ namespace RestWithASPNET.Controllers {
       return Ok(_personBusiness.Update(person));
     }
 
+    //Maps PATCH requests to https://localhost:{port}/api/person/
+    [HttpPatch("{id}")]
+    [ProducesResponseType((200), Type = typeof(List<PersonVO>))]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [TypeFilter(typeof(HyperMediaFilter))]
+    public IActionResult Patch(long id) {
+      var person = _personBusiness.Disable(id);
+      return Ok(person);
+    }
+
     //Maps DELETE requests to https://localhost:{port}/api/person/{id}
     //receiveing an ID as in the Request Path
     [HttpDelete("{id}")]
