@@ -33,7 +33,24 @@ namespace RestWithASPNET.Controllers {
     public IActionResult Get() {
       return Ok(_personBusiness.FindAll());
     }
-    
+
+    //Maps GET requests to https://localhost:{port}/api/person/
+    //Get with parameters for FindAll -> Find All
+    [HttpGet("{sortDirection}/{pageSize}/{page}")]
+    [ProducesResponseType((200), Type = typeof(List<PersonVO>))]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [TypeFilter(typeof(HyperMediaFilter))]
+    public IActionResult Get(
+      [FromQuery] string name,
+      string sortDirection,
+      int pageSize,
+      int page
+    ) {
+      return Ok(_personBusiness.FindWithPagedSearch(name, sortDirection, pageSize, page));
+    }
+
     //Maps GET requests to https://localhost:{port}/api/person/{id}
     //receiveing an ID as in the Request Path
     //Get with parameters for FindById -> Search by ID
@@ -49,6 +66,21 @@ namespace RestWithASPNET.Controllers {
       return Ok(person);
     }
 
+    //Maps GET requests to https://localhost:{port}/api/person/findPersonByName
+    //receiveing an ID as in the Request Path
+    //Get with parameters for FindById -> Search by ID
+    [HttpGet("findPersonByName")]
+    [ProducesResponseType((200), Type = typeof(PersonVO))]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [TypeFilter(typeof(HyperMediaFilter))]
+    public IActionResult Get([FromQuery] string firstName, [FromQuery] string lastName) {
+      var person = _personBusiness.FindByName(firstName, lastName);
+      if (person == null) return NotFound();
+      return Ok(person);
+    }
+
     //Maps POST requests to https://localhost:{port}/api/person/
     //[FromBody] consumes the JSON object sent in the request body
     [HttpPost]
@@ -56,7 +88,7 @@ namespace RestWithASPNET.Controllers {
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [TypeFilter(typeof(HyperMediaFilter))]
-    public IActionResult Post([FromBody] PersonVO person ) {      
+    public IActionResult Post([FromBody] PersonVO person) {
       if (person == null) return BadRequest();
       return Ok(_personBusiness.Create(person));
     }
@@ -92,7 +124,7 @@ namespace RestWithASPNET.Controllers {
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     public IActionResult Delete(long id) {
-      _personBusiness.Delete(id);      
+      _personBusiness.Delete(id);
       return NoContent();
     }
   }
