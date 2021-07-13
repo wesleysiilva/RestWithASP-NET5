@@ -1,0 +1,1 @@
+﻿ALTER TABLE person ADD [enabled] numeric(1) NOT NULL;
