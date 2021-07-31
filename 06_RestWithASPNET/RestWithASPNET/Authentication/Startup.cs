@@ -25,8 +25,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Http;
 
 namespace RestWithASPNET {
   public class Startup {
@@ -121,11 +119,6 @@ namespace RestWithASPNET {
 
       //Injeção de dependencia, referencia a interface e a implementação da API.
       //=======================================================================
-
-      //Upload/Download files
-      services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      services.AddScoped<IFileBusiness, FileBusinessImplementation>();
-
       //Person
       services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 
